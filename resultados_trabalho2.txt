@@ -1,0 +1,125 @@
+====================================================================================================
+              EXECUÇÃO DO TRABALHO 2: MODELOS PROBABILÍSTICOS E TESTES DE NORMALIDADE               
+====================================================================================================
+
+####################################################################################################
+                 Fase P1 — Ajuste e Seleção dos 3 Melhores Modelos Probabilísticos                  
+####################################################################################################
+
+[P1] Gerados 1000 dados a partir de uma distribuição teórica Gamma(a=2.5, scale=2.0).
+Média Amostral: 4.9724
+Desvio Padrão Amostral: 3.0843
+
+Ajustando distribuições comuns utilizando Fitter...
+
+=================================== TABELA DE MÉTRICAS ===================================
+              Erro Quadrático         AIC         BIC  KS Estatística    KS Valor-p
+Distribuição                                                                       
+chi2                 0.015995 4830.656283 4845.379549        0.025796      0.510437
+gamma                0.015995 4830.656283 4845.379549        0.025796      0.510483
+lognorm              0.018806 4842.861198 4857.584464        0.030150      0.316957
+rayleigh             0.022392 4884.915418 4894.730929        0.061844      0.000910
+norm                 0.045128 5094.503847 5104.319358             NaN           NaN
+expon                0.147249 5188.666239 5198.481750        0.176156  1.298208e-27
+cauchy               0.051517 5284.174478 5293.989989        0.128025  9.510106e-15
+powerlaw             0.254953 5917.841630 5932.564895        0.321133  2.998968e-92
+exponpow             0.686856 6123.165900 6137.889166        0.451070 2.976424e-186
+uniform              0.280861 6390.092879 6399.908390        0.530458 4.222874e-263
+==========================================================================================
+
+[P1] Os 3 melhores modelos probabilísticos (baseados no critério BIC) são:
+  1. chi2 (BIC: 4845.3795)
+  2. gamma (BIC: 4845.3795)
+  3. lognorm (BIC: 4857.5845)
+
+[P1] Gráfico do histograma salvo com sucesso em 'histogram_fitter.png'.
+
+####################################################################################################
+              Fases P2 & P3 — Avaliação de Normalidade (Testes Estatísticos e Visual)               
+####################################################################################################
+
+===============================================================================================
+                     TABELA CONSOLIDADA DE TESTES DE NORMALIDADE (n=1000)                      
+===============================================================================================
+Nome do Teste Estatístico        | Estatística  | P-Valor / V. Crítico   | Decisão Final (Alfa=5%)
+-----------------------------------------------------------------------------------------------
+Shapiro-Wilk                     | 0.9206       | 1.6607e-22             | Rejeita Normalidade
+Kolmogorov-Smirnov (Lilliefors)  | 0.0870       | 1.0000e-03             | Rejeita Normalidade
+D-Agostino-Pearson               | 255.0173     | 4.2044e-56             | Rejeita Normalidade
+Anderson-Darling                 | 14.9946      | VC (5%): 0.751          | Rejeita Normalidade
+===============================================================================================
+
+[P2/P3] Interpretação dos testes:
+  Como a amostra é grande (n=1000), os testes tradicionais de hipótese são extremamente sensíveis
+  a desvios mínimos da normalidade, o que explica a forte rejeição (p-valores próximos a zero).
+  Portanto, a análise gráfica pelo Q-Q Plot com bandas de confiança é fundamental.
+[P2/P3] Gráfico Q-Q Plot salvo com sucesso em 'qqplot_normalidade.png'.
+
+####################################################################################################
+              Fase P4 — Definição de Cenários (Baixo, Médio, Elevado) - Alternativa A               
+####################################################################################################
+
+[P4] Quartis empíricos calculados sobre os dados reais:
+  Q1 (25%): 2.7050
+  Q2 (50%): 4.4453 (Mediana)
+  Q3 (75%): 6.5375
+
+==========================================================================================
+                        TABELA DE CENÁRIOS EMPÍRICOS (DADOS REAIS)                        
+==========================================================================================
+Cenário      | Condição        | Limite / Intervalo        | Probabilidade Amostral
+------------------------------------------------------------------------------------------
+Baixo        | X <= Q1         | <= 2.7050                 | 25.00%
+Médio        | Q1 < X < Q3     | ]2.7050, 6.5375[          | 50.00%
+Elevado      | X >= Q3         | >= 6.5375                 | 25.00%
+==========================================================================================
+
+Calculando cenários teóricos comparativos (Alternativa A) para as 3 melhores distribuições:
+
+--------------------------------------------------------------------------------
+Cenários Teóricos para o Modelo: CHI2
+--------------------------------------------------------------------------------
+Cenário      | Fórmula Teórica      | Probabilidade Estimada P(Cenário)
+--------------------------------------------------------------------------------
+Baixo        | P(X <= Q1)           | 25.12%
+Médio        | P(Q1 < X < Q3)       | 49.47%
+Elevado      | P(X >= Q3)           | 25.40%
+
+--------------------------------------------------------------------------------
+Cenários Teóricos para o Modelo: GAMMA
+--------------------------------------------------------------------------------
+Cenário      | Fórmula Teórica      | Probabilidade Estimada P(Cenário)
+--------------------------------------------------------------------------------
+Baixo        | P(X <= Q1)           | 25.12%
+Médio        | P(Q1 < X < Q3)       | 49.47%
+Elevado      | P(X >= Q3)           | 25.40%
+
+--------------------------------------------------------------------------------
+Cenários Teóricos para o Modelo: LOGNORM
+--------------------------------------------------------------------------------
+Cenário      | Fórmula Teórica      | Probabilidade Estimada P(Cenário)
+--------------------------------------------------------------------------------
+Baixo        | P(X <= Q1)           | 24.32%
+Médio        | P(Q1 < X < Q3)       | 51.24%
+Elevado      | P(X >= Q3)           | 24.44%
+--------------------------------------------------------------------------------
+
+================================================================================
+                   TABELA COMPARATIVA CONSOLIDADA DE CENÁRIOS                   
+================================================================================
+                       Baixo (%) Médio (%) Elevado (%)
+Modelo                                                
+chi2                      25.12%    49.47%      25.40%
+gamma                     25.12%    49.47%      25.40%
+lognorm                   24.32%    51.24%      24.44%
+Dados Amostrais (Real)    25.00%    50.00%      25.00%
+================================================================================
+
+[P4] Análise da Alternativa A:
+  A tabela acima compara as probabilidades de cada cenário estimadas pelos modelos teóricos.
+  Quanto mais próximo o modelo estimar as proporções dos Dados Amostrais (25% - 50% - 25%),
+  melhor é a aderência prática do modelo probabilístico para modelar os cenários de risco.
+
+====================================================================================================
+                     FIM DA EXECUÇÃO - DADOS SALVOS EM resultados_trabalho2.txt                     
+====================================================================================================
